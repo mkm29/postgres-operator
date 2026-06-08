@@ -158,6 +158,7 @@ type ConnectionPooler struct {
 	User                                 string `name:"connection_pooler_user" default:"pooler"`
 	Image                                string `name:"connection_pooler_image" default:"ghcr.io/zalando/postgres-operator/pgbouncer:latest"`
 	Mode                                 string `name:"connection_pooler_mode" default:"transaction"`
+	MountPath                            string `name:"connection_pooler_mount_path" default:"/etc/pgbouncer"`
 	MaxDBConnections                     *int32 `name:"connection_pooler_max_db_connections" default:"60"`
 	ConnectionPoolerDefaultCPURequest    string `name:"connection_pooler_default_cpu_request"`
 	ConnectionPoolerDefaultMemoryRequest string `name:"connection_pooler_default_memory_request"`

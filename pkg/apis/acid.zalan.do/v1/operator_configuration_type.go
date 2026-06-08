@@ -215,6 +215,7 @@ type ConnectionPoolerConfiguration struct {
 	User                 string `json:"connection_pooler_user,omitempty"`
 	Image                string `json:"connection_pooler_image,omitempty"`
 	Mode                 string `json:"connection_pooler_mode,omitempty"`
+	MountPath            string `json:"connection_pooler_mount_path,omitempty"`
 	MaxDBConnections     *int32 `json:"connection_pooler_max_db_connections,omitempty"`
 	DefaultCPURequest    string `json:"connection_pooler_default_cpu_request,omitempty"`
 	DefaultMemoryRequest string `json:"connection_pooler_default_memory_request,omitempty"`

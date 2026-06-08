@@ -400,9 +400,15 @@ func (c *Cluster) generateConnectionPoolerPodTemplate(role PostgresRole) (
 			},
 		},
 	})
+	effectiveMountPath := util.Coalesce(
+		connectionPoolerSpec.MountPath,
+		c.OpConfig.ConnectionPooler.MountPath)
+	if effectiveMountPath == "" {
+		effectiveMountPath = constants.ConnectionPoolerDefaultMountPath
+	}
 	volumeMounts = append(volumeMounts, v1.VolumeMount{
 		Name:      fmt.Sprintf("%s-u", c.connectionPoolerName(role)),
-		MountPath: "/etc/pgbouncer/userlist.txt",
+		MountPath: fmt.Sprintf("%s/userlist.txt", strings.TrimRight(effectiveMountPath, "/")),
 		SubPath:   "userlist.txt",
 		ReadOnly:  true,
 	})

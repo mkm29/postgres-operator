@@ -1154,3 +1154,68 @@ func TestConnectionPoolerServiceSpec(t *testing.T) {
 		}
 	}
 }
+
+func TestConnectionPoolerMountPath(t *testing.T) {
+	testName := "Test connection pooler configurable mount path"
+
+	// find the userlist.txt mount on the pooler container
+	userlistMountPath := func(podSpec *v1.PodTemplateSpec) (string, bool) {
+		container := podSpec.Spec.Containers[constants.ConnectionPoolerContainer]
+		for _, vm := range container.VolumeMounts {
+			if vm.SubPath == "userlist.txt" {
+				return vm.MountPath, true
+			}
+		}
+		return "", false
+	}
+
+	newPoolerCluster := func(opConfigMountPath string, specMountPath string) *Cluster {
+		c := New(
+			Config{
+				OpConfig: config.Config{
+					ProtectedRoles: []string{"admin"},
+					Auth: config.Auth{
+						SuperUsername:       superUserName,
+						ReplicationUsername: replicationUserName,
+					},
+					ConnectionPooler: config.ConnectionPooler{
+						MountPath: opConfigMountPath,
+					},
+				},
+			}, k8sutil.KubernetesClient{}, acidv1.Postgresql{}, logger, eventRecorder)
+		c.Spec = acidv1.PostgresSpec{
+			ConnectionPooler: &acidv1.ConnectionPooler{MountPath: specMountPath},
+		}
+		return c
+	}
+
+	tests := []struct {
+		subTest           string
+		opConfigMountPath string
+		specMountPath     string
+		expected          string
+	}{
+		{"operator config default applies", "/etc/pgbouncer", "", "/etc/pgbouncer/userlist.txt"},
+		{"operator config override applies", "/opt/pgbouncer", "", "/opt/pgbouncer/userlist.txt"},
+		{"per-cluster spec overrides operator config", "/opt/pgbouncer", "/custom/path", "/custom/path/userlist.txt"},
+		{"empty values fall back to constant default", "", "", "/etc/pgbouncer/userlist.txt"},
+	}
+
+	for _, tt := range tests {
+		cluster := newPoolerCluster(tt.opConfigMountPath, tt.specMountPath)
+		podSpec, err := cluster.generateConnectionPoolerPodTemplate(Master)
+		if err != nil {
+			t.Errorf("%s [%s]: unexpected error %v", testName, tt.subTest, err)
+			continue
+		}
+		got, found := userlistMountPath(podSpec)
+		if !found {
+			t.Errorf("%s [%s]: userlist.txt mount not found", testName, tt.subTest)
+			continue
+		}
+		if got != tt.expected {
+			t.Errorf("%s [%s]: got mount path %q, expected %q",
+				testName, tt.subTest, got, tt.expected)
+		}
+	}
+}

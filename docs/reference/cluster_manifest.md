@@ -606,6 +606,12 @@ for both master and replica pooler services (if `enableReplicaConnectionPooler`
 * **dockerImage**
   Which docker image to use for connection pooler deployment.
 
+* **mountPath**
+  path inside the connection pooler container where the operator mounts the
+  generated `userlist.txt`. Overrides the operator-wide
+  `connection_pooler_mount_path` for this cluster. Optional, defaults to the
+  operator configuration value (`/etc/pgbouncer`).
+
 * **maxDBConnections**
   How many connections the pooler can max hold. This value is divided among the
   pooler pods.

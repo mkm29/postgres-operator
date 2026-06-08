@@ -153,6 +153,8 @@ spec:
                 properties:
                   dockerImage:
                     type: string
+                  mountPath:
+                    type: string
                   maxDBConnections:
                     format: int32
                     type: integer

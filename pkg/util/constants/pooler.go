@@ -7,6 +7,7 @@ const (
 	ConnectionPoolerSchemaName           = "pooler"
 	ConnectionPoolerDefaultType          = "pgbouncer"
 	ConnectionPoolerDefaultMode          = "transaction"
+	ConnectionPoolerDefaultMountPath     = "/etc/pgbouncer"
 	ConnectionPoolerDefaultCpuRequest    = "500m"
 	ConnectionPoolerDefaultCpuLimit      = "1"
 	ConnectionPoolerDefaultMemoryRequest = "100Mi"

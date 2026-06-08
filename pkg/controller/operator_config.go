@@ -282,6 +282,10 @@ func (c *Controller) importConfigurationFromCRD(fromCRD *acidv1.OperatorConfigur
 		fromCRD.ConnectionPooler.Mode,
 		constants.ConnectionPoolerDefaultMode)
 
+	result.ConnectionPooler.MountPath = util.Coalesce(
+		fromCRD.ConnectionPooler.MountPath,
+		constants.ConnectionPoolerDefaultMountPath)
+
 	result.ConnectionPooler.ConnectionPoolerDefaultCPURequest = fromCRD.ConnectionPooler.DefaultCPURequest
 	result.ConnectionPooler.ConnectionPoolerDefaultMemoryRequest = fromCRD.ConnectionPooler.DefaultMemoryRequest
 	result.ConnectionPooler.ConnectionPoolerDefaultCPULimit = fromCRD.ConnectionPooler.DefaultCPULimit

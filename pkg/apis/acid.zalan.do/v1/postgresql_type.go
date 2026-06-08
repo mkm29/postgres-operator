@@ -324,6 +324,7 @@ type ConnectionPooler struct {
 	// +kubebuilder:validation:Enum=session;transaction
 	Mode             string `json:"mode,omitempty"`
 	DockerImage      string `json:"dockerImage,omitempty"`
+	MountPath        string `json:"mountPath,omitempty"`
 	MaxDBConnections *int32 `json:"maxDBConnections,omitempty"`
 
 	*Resources `json:"resources,omitempty"`

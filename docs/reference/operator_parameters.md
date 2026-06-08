@@ -1081,6 +1081,12 @@ operator being able to provide some reasonable defaults.
   Docker image to use for connection pooler deployment.
   Default: "ghcr.io/zalando/postgres-operator/pgbouncer:latest"
 
+* **connection_pooler_mount_path**
+  path inside the connection pooler container where the operator mounts the
+  generated `userlist.txt`. Hardened images (e.g. Iron Bank) that cannot write
+  to `/etc/pgbouncer` should set this to their writable config directory such
+  as `/opt/pgbouncer`. The default is `/etc/pgbouncer`.
+
 * **connection_pooler_max_db_connections**
   How many connections the pooler can max hold. This value is divided among the
   pooler pods. Default is 60 which will make up 30 connections per pod for the
